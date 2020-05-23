@@ -45,13 +45,13 @@ impl Default for CustomTheme {
 }
 
 impl Theme for CustomTheme {
-    fn format_prompt(&self, f: &mut fmt::Write, prompt: &str) -> fmt::Result {
+    fn format_prompt(&self, f: &mut dyn fmt::Write, prompt: &str) -> fmt::Result {
         write!(f, "{}:", prompt)
     }
 
     fn format_singleline_prompt(
         &self,
-        f: &mut fmt::Write,
+        f: &mut dyn fmt::Write,
         prompt: &str,
         default: Option<&str>,
     ) -> fmt::Result {
@@ -61,13 +61,13 @@ impl Theme for CustomTheme {
         }
     }
 
-    fn format_error(&self, f: &mut fmt::Write, err: &str) -> fmt::Result {
+    fn format_error(&self, f: &mut dyn fmt::Write, err: &str) -> fmt::Result {
         write!(f, "{}: {}", self.error_style.apply_to("error"), err)
     }
 
     fn format_confirmation_prompt(
         &self,
-        f: &mut fmt::Write,
+        f: &mut dyn fmt::Write,
         prompt: &str,
         default: Option<bool>,
     ) -> fmt::Result {
@@ -82,7 +82,7 @@ impl Theme for CustomTheme {
 
     fn format_confirmation_prompt_selection(
         &self,
-        f: &mut fmt::Write,
+        f: &mut dyn fmt::Write,
         prompt: &str,
         selection: bool,
     ) -> fmt::Result {
@@ -100,7 +100,7 @@ impl Theme for CustomTheme {
 
     fn format_single_prompt_selection(
         &self,
-        f: &mut fmt::Write,
+        f: &mut dyn fmt::Write,
         prompt: &str,
         sel: &str,
     ) -> fmt::Result {
@@ -109,7 +109,7 @@ impl Theme for CustomTheme {
 
     fn format_multi_prompt_selection(
         &self,
-        f: &mut fmt::Write,
+        f: &mut dyn fmt::Write,
         prompt: &str,
         selections: &[&str],
     ) -> fmt::Result {
@@ -125,7 +125,12 @@ impl Theme for CustomTheme {
         Ok(())
     }
 
-    fn format_selection(&self, f: &mut fmt::Write, text: &str, st: SelectionStyle) -> fmt::Result {
+    fn format_selection(
+        &self,
+        f: &mut dyn fmt::Write,
+        text: &str,
+        st: SelectionStyle,
+    ) -> fmt::Result {
         match st {
             SelectionStyle::CheckboxUncheckedSelected => write!(
                 f,
@@ -186,50 +191,39 @@ enum CommitType {
 
 struct CommitTypeDetails {
     description: String,
-    emoji: String,
 }
 
 fn get_attrs(ty: &CommitType) -> CommitTypeDetails {
     match ty {
         CommitType::Chore => CommitTypeDetails {
             description: "Build process or auxiliary tool changes".to_owned(),
-            emoji: "🤖".to_owned(),
         },
         CommitType::CI => CommitTypeDetails {
             description: "CI related changes".to_owned(),
-            emoji: "🎡".to_owned(),
         },
         CommitType::Docs => CommitTypeDetails {
             description: "Documentation only changes".to_owned(),
-            emoji: "✏️".to_owned(),
         },
         CommitType::Feature => CommitTypeDetails {
             description: "A new feature".to_owned(),
-            emoji: "🎸".to_owned(),
         },
         CommitType::Fix => CommitTypeDetails {
             description: "A bug fix".to_owned(),
-            emoji: "🐛".to_owned(),
         },
         CommitType::Perf => CommitTypeDetails {
             description: "A code change that improves performance".to_owned(),
-            emoji: "⚡️".to_owned(),
         },
         CommitType::Refactor => CommitTypeDetails {
             description: "A code change that neither fixes a bug or adds a feature".to_owned(),
-            emoji: "💡".to_owned(),
         },
         CommitType::Release => CommitTypeDetails {
             description: "Create a release commit".to_owned(),
-            emoji: "🏹".to_owned(),
         },
         CommitType::Style => CommitTypeDetails {
             description: "Markup, white-space, formatting, missing semi-colons...".to_owned(),
-            emoji: "💄".to_owned(),
         },
         CommitType::Test => CommitTypeDetails {
             description: "Adding missing tests".to_owned(),
-            emoji: "💍".to_owned(),
         },
     }
 }
@@ -263,7 +257,6 @@ fn main() {
         .unwrap();
     let s = selection.unwrap();
     let selected_type = *(&options[s]);
-    let selected_type_attrs = get_attrs(&selected_type);
 
     let scope = Input::<String>::with_theme(&theme)
         .with_prompt("What is the scope of this change (e.g. component or file name)? (press enter to skip) ")
@@ -292,14 +285,13 @@ fn main() {
 
     // Generate commit message
     let msg_header = format!(
-        "{}{}: {} {}",
+        "{}{}: {}",
         selected_type,
         if scope.len() > 0 {
             format!("({})", scope)
         } else {
             "".to_owned()
         },
-        selected_type_attrs.emoji,
         subject
     );
 
@@ -340,5 +332,7 @@ fn main() {
     let mut cmd = Command::new("git");
     cmd.arg("commit").arg("-m").arg(msg).args(&args[1..]);
 
-    cmd.stdout(Stdio::null()).spawn().expect("failed to run git commit");
+    cmd.stdout(Stdio::null())
+        .spawn()
+        .expect("failed to run git commit");
 }
