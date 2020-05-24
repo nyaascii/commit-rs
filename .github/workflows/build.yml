@@ -1,0 +1,46 @@
+name: Build and upload artifacts
+
+on:
+  push:
+    branches:
+      - master
+      - release/*
+
+jobs:
+  build-ubuntu:
+
+    runs-on: [ubuntu-latest]
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build
+      run: cargo build --verbose --release
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        path: target/release/cargo-commit
+        name: cargo-commit-linux
+  build-macOS:
+
+    runs-on: [macOS-latest]
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build
+      run: cargo build --verbose --release
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        path: target/release/cargo-commit
+        name: cargo-commit-macos
+        
+  build-windows:
+
+    runs-on: [windows-latest]
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build
+      run: cargo build --verbose --release
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        path: target/release/cargo-commit.exe
+        name: cargo-commit-windows.exe
