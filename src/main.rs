@@ -338,10 +338,13 @@ fn main() {
     let msg = [msg_header_capped, msg_body_wrapped, msg_footer_wrapped].join("");
 
     let args: Vec<String> = env::args().collect();
-    let mut cmd = Command::new("git");
-    cmd.arg("commit").arg("-m").arg(msg).args(&args[1..]);
 
-    cmd.stdout(Stdio::null())
+    Command::new("git")
+        .arg("commit")
+        .arg("-m")
+        .arg(msg)
+        .args(&args[1..])
+        .stdout(Stdio::null())
         .spawn()
-        .expect("failed to run git commit");
+        .expect("Failed to run git commit");
 }
