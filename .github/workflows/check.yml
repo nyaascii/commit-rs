@@ -1,0 +1,30 @@
+name: Check commit
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  clippy_check:
+    runs-on: ubuntu-latest
+    steps:
+          - uses: actions/checkout@v2
+          - run: rustup component add clippy
+          - name: Clippy
+            uses: actions-rs/clippy-check@v1.0.5
+            with:
+              token: ${{ secrets.GITHUB_TOKEN }}
+              args: --all-features
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build
+      run: cargo build --verbose --release
+    - name: Run tests
+      run: cargo test --verbose
+      
