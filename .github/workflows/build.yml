@@ -17,8 +17,8 @@ jobs:
     - name: Upload build artifacts
       uses: actions/upload-artifact@v2
       with:
-        path: target/release/cargo-commit
-        name: cargo-commit-linux
+        path: target/release/git-c
+        name: git-c-linux
   build-macOS:
 
     runs-on: [macOS-latest]
@@ -29,8 +29,8 @@ jobs:
     - name: Upload build artifacts
       uses: actions/upload-artifact@v2
       with:
-        path: target/release/cargo-commit
-        name: cargo-commit-macos
+        path: target/release/git-c
+        name: git-c-macos
         
   build-windows:
 
@@ -42,5 +42,5 @@ jobs:
     - name: Upload build artifacts
       uses: actions/upload-artifact@v2
       with:
-        path: target/release/cargo-commit.exe
-        name: cargo-commit-windows.exe
+        path: target/release/git-c.exe
+        name: git-c-windows.exe
