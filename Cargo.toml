@@ -1,6 +1,6 @@
 [package]
-name = "cargo-commit"
-version = "1.0.0"
+name = "git-c"
+version = "1.1.0"
 authors = ["Alic Szecsei <aszecsei@gmail.com>"]
 edition = "2018"
 
