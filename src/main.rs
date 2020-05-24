@@ -335,10 +335,7 @@ fn main() {
     let msg_body_wrapped = fill(&msg_body, 100);
     let msg_footer_wrapped = fill(&msg_footer, 100);
 
-    let msg = format!(
-        "{}{}{}",
-        msg_header_capped, msg_body_wrapped, msg_footer_wrapped
-    );
+    let msg = [msg_header_capped, msg_body_wrapped, msg_footer_wrapped].join("");
 
     let args: Vec<String> = env::args().collect();
     let mut cmd = Command::new("git");
