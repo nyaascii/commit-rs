@@ -1,5 +1,5 @@
-## ⚠️ This is a modified version of Alic Szecsei's commit-rs! I've just removed the emojis because I find them a bit distracting in terminal :)
-#  commit-rs
+### ⚠️ This is a modified version of Alic Szecsei's commit-rs. Some minor changes, like check for staged files or removed emojis (I find them a bit distracting in terminal) :) 
+#  commit-rs 
 
 > A rust script to enable automated git commits according to conventional commits
 
