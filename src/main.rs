@@ -229,6 +229,18 @@ fn get_attrs(ty: &CommitType) -> CommitTypeDetails {
 }
 
 fn main() {
+    // Check if there are any staged changes
+    let status_output = Command::new("git")
+        .arg("status")
+        .output()
+        .expect("Failed to get repository status");
+
+    let status_stdout = String::from_utf8(status_output.stdout).expect("Cannot execute git status");
+    if !status_stdout.contains("Changes to be committed") {
+        println!("The repository contains no staged changes!");
+        return;
+    }
+
     println!("\nAll commit message lines will be cropped at 100 characters.\n");
 
     // TODO: Change this to EnumIter
