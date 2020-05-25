@@ -229,6 +229,8 @@ fn get_attrs(ty: &CommitType) -> CommitTypeDetails {
 }
 
 fn main() {
+    let args: Vec<String> = env::args().collect();
+
     // Check if there are any staged changes
     let status_output = Command::new("git")
         .arg("status")
@@ -236,7 +238,10 @@ fn main() {
         .expect("Failed to get repository status");
 
     let status_stdout = String::from_utf8(status_output.stdout).expect("Cannot execute git status");
-    if !status_stdout.contains("Changes to be committed") {
+
+    if !status_stdout.contains("Changes to be committed")
+        && !args.contains(&String::from("--amend"))
+    {
         println!("The repository contains no staged changes!");
         return;
     }
@@ -336,8 +341,6 @@ fn main() {
     let msg_footer_wrapped = fill(&msg_footer, 100);
 
     let msg = [msg_header_capped, msg_body_wrapped, msg_footer_wrapped].join("");
-
-    let args: Vec<String> = env::args().collect();
 
     Command::new("git")
         .arg("commit")
