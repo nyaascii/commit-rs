@@ -1,4 +1,4 @@
-### ⚠️ This is a modified version of Alic Szecsei's commit-rs. Some minor changes, like check for staged files or removed emojis (I find them a bit distracting in terminal) :) 
+### ⚠️ Modified version of Alic Szecsei's commit-rs. Some minor changes, like a check for staged files or no emoji (I find them a bit distracting) ^u^
 #  commit-rs ![Rust](https://github.com/nyaascii/commit-rs/workflows/Rust/badge.svg)
 
 > A rust script to enable automated git commits according to conventional commits
